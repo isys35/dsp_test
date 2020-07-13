@@ -30,6 +30,8 @@ def add_audio(audio_url, user_id):
     resp = requests.get(audio_url)
     with open(f"audio/{file_name}", 'wb') as audio_file:
         audio_file.write(resp.content)
+    song = AudioSegment.from_mp3(f"audio/{file_name}")
+    song.export('audio/{}.wav'.format(file_name.split('.')[0]), format="wav")
     conn = sqlite3.connect(config.DB_NAME)
     cursor = conn.cursor()
     query = """INSERT INTO audio (path, user_id) VALUES (?, ?)"""
