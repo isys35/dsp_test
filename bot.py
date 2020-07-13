@@ -17,7 +17,8 @@ def save_audio(message):
     audio_url = "https://api.telegram.org/file/bot{}/{}".format(config.TOKEN,
                                                                 bot.get_file(message.audio.file_id).file_path)
     user_id = message.from_user.id
-    db.add_audio(audio_url, user_id)
+    wav_file = db.add_audio(audio_url, user_id)
+    bot.send_audio(message.chat.id, wav_file)
 
 
 bot.polling(timeout=1)
