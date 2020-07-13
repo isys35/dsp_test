@@ -34,7 +34,7 @@ def add_audio(audio_url, user_id):
     song.export('audio/{}.wav'.format(file_name.split('.')[0]), format="wav")
     conn = sqlite3.connect(config.DB_NAME)
     cursor = conn.cursor()
-    query = """INSERT INTO audio (path, user_id) VALUES (?, ?)"""
+    query = """INSERT INTO audio (git path, user_id) VALUES (?, ?)"""
     cursor.execute(query, [f"audio/{file_name}", int(user_id)])
     conn.commit()
     cursor.close()
