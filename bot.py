@@ -1,8 +1,6 @@
 import telebot
 import config
 import db
-import requests
-import cv2
 
 bot = telebot.TeleBot(config.TOKEN)
 
@@ -25,25 +23,12 @@ def save_audio(message):
 def save_photo(message):
     photo_url = "https://api.telegram.org/file/bot{}/{}".format(config.TOKEN,
                                                                 bot.get_file(message.photo[-1].file_id).file_path)
-    check_photo(photo_url)
-
-
-def check_photo(photo_url):
-    file_name = photo_url.split('/')[-1]
-    resp = requests.get(photo_url)
-    image_path = f"photo/{file_name}"
-    with open(image_path, 'wb') as photo_file:
-        photo_file.write(resp.content)
-    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-    image = cv2.imread(image_path)
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(
-        gray,
-        scaleFactor=1.1,
-        minNeighbors=5,
-        minSize=(10, 10)
-    )
-    print(faces)
+    user_id = message.from_user.id
+    photo_with_rectangle = db.add_photo(photo_url, user_id)
+    if not photo_with_rectangle:
+        bot.send_message(message.chat.id, 'Лица не найдены')
+    else:
+        bot.send_photo(message.chat.id, photo_with_rectangle)
 
 
 if __name__ == '__main__':
