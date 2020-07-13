@@ -1,6 +1,8 @@
 import telebot
 import config
 import db
+from requests.exceptions import ConnectionError
+import time
 
 bot = telebot.TeleBot(config.TOKEN)
 
@@ -32,4 +34,9 @@ def save_photo(message):
 
 
 if __name__ == '__main__':
-    bot.polling(timeout=1)
+    while True:
+        try:
+            bot.polling(timeout=1)
+        except ConnectionError:
+            print('ConnectionEror')
+            time.sleep(10)
