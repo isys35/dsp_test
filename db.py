@@ -36,7 +36,7 @@ def add_audio(audio_url, user_id):
     song.set_frame_rate(16000)
     wav_file_name = 'audio/{}.wav'.format(file_name.split('.')[0])
     song.export(wav_file_name, format="wav")
-    os.remove(file_name)
+    os.remove(f"audio/{file_name}")
     conn = sqlite3.connect(config.DB_NAME)
     cursor = conn.cursor()
     query = """INSERT INTO audio (path, user_id) VALUES (?, ?)"""
